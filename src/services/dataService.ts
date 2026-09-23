@@ -157,59 +157,30 @@ const DEFAULT_VEHICLES: Vehicle[] = [
   }
 ];
 
-const DEFAULT_CLIENTS: Client[] = [
-  {
-    id: 'c_demo_1',
-    nombre: 'Carlos Menéndez',
-    email: 'carlos.m@example.sv',
-    telefono: '+503 7845-1234',
-    reservas: 3,
-    gastoTotal: 680,
-    registradoEl: '2026-02-10T14:20:00Z'
-  },
-  {
-    id: 'c_demo_2',
-    nombre: 'Elena Rodríguez',
-    email: 'elena.rodriguez@gmail.com',
-    telefono: '+503 7120-9988',
-    reservas: 1,
-    gastoTotal: 174,
-    registradoEl: '2026-03-01T09:15:00Z'
-  }
-];
+const DEFAULT_CLIENTS: Client[] = [];
 
-const DEFAULT_RESERVATIONS: Reservation[] = [
-  {
-    id: 'r_171000101',
-    clientName: 'Carlos Menéndez',
-    clientEmail: 'carlos.m@example.sv',
-    vehicleId: 'v1',
-    vehicleName: 'Toyota Hilux Double Cab 4x4',
-    days: 4,
-    pickupDate: '2026-09-20',
-    returnDate: '2026-09-24',
-    branchId: 'b1',
-    branchName: 'San Salvador - Paseo Escalón',
-    total: 272,
-    status: 'en_curso',
-    createdAt: '2026-09-18T10:00:00Z'
-  },
-  {
-    id: 'r_171000102',
-    clientName: 'Elena Rodríguez',
-    clientEmail: 'elena.rodriguez@gmail.com',
-    vehicleId: 'v2',
-    vehicleName: 'Toyota RAV4 Hybrid AWD',
-    days: 3,
-    pickupDate: '2026-09-15',
-    returnDate: '2026-09-18',
-    branchId: 'b2',
-    branchName: 'Aeropuerto Internacional (SAL - San Óscar Romero)',
-    total: 174,
-    status: 'finalizado',
-    createdAt: '2026-09-12T15:30:00Z'
-  }
-];
+const DEFAULT_RESERVATIONS: Reservation[] = [];
+
+// Automatic cleanup of legacy demo mock data
+export function cleanMockStorage(): void {
+  try {
+    const rawProfile = localStorage.getItem(STORAGE_KEYS.PROFILE);
+    if (rawProfile && (rawProfile.includes('Carlos') || rawProfile.includes('Elena'))) {
+      localStorage.removeItem(STORAGE_KEYS.PROFILE);
+    }
+    const rawClients = localStorage.getItem(STORAGE_KEYS.CLIENTS);
+    if (rawClients && (rawClients.includes('c_demo_') || rawClients.includes('Carlos Menéndez') || rawClients.includes('Elena Rodríguez'))) {
+      localStorage.setItem(STORAGE_KEYS.CLIENTS, JSON.stringify([]));
+    }
+    const rawReservations = localStorage.getItem(STORAGE_KEYS.RESERVATIONS);
+    if (rawReservations && (rawReservations.includes('r_17100010') || rawReservations.includes('Carlos Menéndez') || rawReservations.includes('Elena Rodríguez'))) {
+      localStorage.setItem(STORAGE_KEYS.RESERVATIONS, JSON.stringify([]));
+    }
+  } catch {}
+}
+
+// Run cleanup immediately
+cleanMockStorage();
 
 // --- Vehicles ---
 export function getVehicles(): Vehicle[] {
@@ -320,7 +291,8 @@ export function getClients(): Client[] {
       saveClients(DEFAULT_CLIENTS);
       return DEFAULT_CLIENTS;
     }
-    return JSON.parse(raw);
+    const list: Client[] = JSON.parse(raw);
+    return list.filter(c => !c.id.startsWith('c_demo_') && c.nombre !== 'Carlos Menéndez' && c.nombre !== 'Elena Rodríguez');
   } catch (e) {
     return DEFAULT_CLIENTS;
   }
@@ -439,7 +411,8 @@ export function getReservations(): Reservation[] {
       saveReservations(DEFAULT_RESERVATIONS);
       return DEFAULT_RESERVATIONS;
     }
-    return JSON.parse(raw);
+    const list: Reservation[] = JSON.parse(raw);
+    return list.filter(r => !r.id.startsWith('r_17100010') && r.clientName !== 'Carlos Menéndez' && r.clientName !== 'Elena Rodríguez');
   } catch {
     return DEFAULT_RESERVATIONS;
   }

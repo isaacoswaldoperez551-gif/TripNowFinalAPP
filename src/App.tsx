@@ -18,7 +18,7 @@ import {
   subscribeToMovements,
   subscribeToReservations,
   subscribeToClients,
-  seedInitialFirestoreData
+  cleanMockFirestoreData
 } from './services/firebase';
 import { Navbar } from './components/Navbar';
 import { HomeHero } from './components/HomeHero';
@@ -49,14 +49,14 @@ function AppContent() {
   const [isAdmin, setIsAdmin] = useState<boolean>(isAdminAuthenticated());
 
   // Modals & Navigation helpers
-  const [authModalOpen, setAuthModalOpen] = useState<boolean>(false);
+  const [authModalOpen, setAuthModalOpen] = useState<boolean>(!getProfile());
   const [catalogInitialFilter, setCatalogInitialFilter] = useState<string>('all');
   const [selectedBranchId, setSelectedBranchId] = useState<string>('b1');
 
   // Initialize and subscribe to Firestore Real-Time Stream
   useEffect(() => {
-    // Seed initial data if database is empty so real-time works instantly
-    seedInitialFirestoreData(vehicles, branches, clients, reservations);
+    // Clean any legacy mock / seed data from Firestore so only real entries appear
+    cleanMockFirestoreData();
 
     // Subscribe to live movements stream
     const unsubMovements = subscribeToMovements(
@@ -71,16 +71,12 @@ function AppContent() {
 
     // Subscribe to live reservations
     const unsubReservations = subscribeToReservations((liveReservations) => {
-      if (liveReservations && liveReservations.length > 0) {
-        setReservations(liveReservations);
-      }
+      setReservations(liveReservations || []);
     });
 
     // Subscribe to live clients
     const unsubClients = subscribeToClients((liveClients) => {
-      if (liveClients && liveClients.length > 0) {
-        setClients(liveClients);
-      }
+      setClients(liveClients || []);
     });
 
     return () => {
@@ -156,7 +152,9 @@ function AppContent() {
 
   // Admin Authentication
   const handleAdminLogin = (u: string, p: string): boolean => {
-    if (u === 'admin' && p === 'admin123') {
+    const validUser = u.trim().toLowerCase() === 'isaac';
+    const validPass = p === 'tocino2023';
+    if (validUser && validPass) {
       setAdminSession(true);
       setIsAdmin(true);
       return true;

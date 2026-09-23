@@ -51,8 +51,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const toast = useToast();
 
   // Login form state
-  const [username, setUsername] = useState('admin');
-  const [password, setPassword] = useState('admin123');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
 
   // Active admin tab: 'movements' | 'inventory' | 'trips' | 'clients' | 'branches' | 'sheets'
@@ -97,7 +97,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     e.preventDefault();
     const success = onLogin(username, password);
     if (!success) {
-      setLoginError(lang === 'es' ? 'Credenciales incorrectas (usa admin / admin123)' : 'Invalid credentials (use admin / admin123)');
+      setLoginError(lang === 'es' ? 'Usuario o contraseña incorrectos' : 'Invalid username or password');
     } else {
       setLoginError('');
       toast.success(lang === 'es' ? 'Sesión de administrador iniciada' : 'Admin session started');

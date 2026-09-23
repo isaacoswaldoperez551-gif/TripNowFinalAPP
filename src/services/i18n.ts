@@ -91,7 +91,7 @@ export const DICTIONARY: Record<Language, Record<string, string>> = {
 
     // Admin
     'admin.login_title': 'Acceso Administrativo',
-    'admin.login_desc': 'Credenciales de demostración: admin / admin123',
+    'admin.login_desc': 'Acceso seguro restringido para la administración de Trip Now.',
     'admin.user': 'Usuario',
     'admin.pass': 'Contraseña',
     'admin.login_btn': 'Ingresar al Panel',
@@ -227,7 +227,7 @@ export const DICTIONARY: Record<Language, Record<string, string>> = {
 
     // Admin
     'admin.login_title': 'Admin Login',
-    'admin.login_desc': 'Demo credentials: admin / admin123',
+    'admin.login_desc': 'Secure restricted access for Trip Now administration.',
     'admin.user': 'Username',
     'admin.pass': 'Password',
     'admin.login_btn': 'Access Dashboard',

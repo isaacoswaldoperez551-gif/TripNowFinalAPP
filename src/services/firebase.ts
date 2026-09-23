@@ -1,6 +1,6 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import {
-  getFirestore, collection, doc, setDoc, updateDoc,
+  getFirestore, collection, doc, setDoc, updateDoc, deleteDoc,
   onSnapshot, query, orderBy, limit, getDocs
 } from 'firebase/firestore';
 import firebaseConfig from '../../firebase-applet-config.json';
@@ -200,55 +200,43 @@ export const updateReservationStatusInFirestore = async (
 };
 
 /**
- * Seed initial data to Firestore if collections are empty so real-time works out-of-the-box
+ * Clean legacy demo mock data from Firestore so only real registered clients,
+ * real reservations, and authentic real-time movements exist.
  */
-export const seedInitialFirestoreData = async (
-  initialVehicles: Vehicle[],
-  initialBranches: Branch[],
-  initialClients: Client[],
-  initialReservations: Reservation[]
-) => {
+export const cleanMockFirestoreData = async () => {
   try {
-    // Check if movements already exist
-    const snap = await getDocs(query(collection(db, MOVEMENTS_COL), limit(1)));
-    if (!snap.empty) {
-      return; // Already initialized
+    // Delete any demo clients in Firestore
+    const clientsSnap = await getDocs(collection(db, CLIENTS_COL));
+    for (const d of clientsSnap.docs) {
+      const data = d.data();
+      if (d.id.startsWith('c_demo_') || data.nombre === 'Carlos Menéndez' || data.nombre === 'Elena Rodríguez') {
+        await deleteDoc(doc(db, CLIENTS_COL, d.id));
+      }
     }
 
-    // Seed initial clients
-    for (const client of initialClients) {
-      await setDoc(doc(db, CLIENTS_COL, client.id), client);
+    // Delete any demo reservations in Firestore
+    const resSnap = await getDocs(collection(db, RESERVATIONS_COL));
+    for (const d of resSnap.docs) {
+      const data = d.data();
+      if (d.id.startsWith('r_17100010') || data.clientName === 'Carlos Menéndez' || data.clientName === 'Elena Rodríguez') {
+        await deleteDoc(doc(db, RESERVATIONS_COL, d.id));
+      }
     }
 
-    // Seed initial reservations
-    for (const res of initialReservations) {
-      await setDoc(doc(db, RESERVATIONS_COL, res.id), res);
-      // Record initial movements for these
-      await setDoc(doc(db, MOVEMENTS_COL, 'seed_' + res.id), {
-        id: 'seed_' + res.id,
-        timestamp: res.createdAt,
-        type: 'reserva_creada',
-        clientName: res.clientName,
-        clientEmail: res.clientEmail,
-        vehicleName: res.vehicleName,
-        branchName: res.branchName,
-        amount: res.total,
-        details: `Reserva activa: ${res.vehicleName} (${res.days} días) en ${res.branchName}`,
-        status: res.status
-      } as ClientMovement);
+    // Delete any demo movements in Firestore
+    const movSnap = await getDocs(collection(db, MOVEMENTS_COL));
+    for (const d of movSnap.docs) {
+      const data = d.data();
+      if (
+        d.id.startsWith('seed_') ||
+        data.clientName === 'Carlos Menéndez' ||
+        data.clientName === 'Elena Rodríguez' ||
+        data.clientName === 'Sistema Trip Now'
+      ) {
+        await deleteDoc(doc(db, MOVEMENTS_COL, d.id));
+      }
     }
-
-    // Seed initial welcome movement
-    await setDoc(doc(db, MOVEMENTS_COL, 'seed_welcome'), {
-      id: 'seed_welcome',
-      timestamp: new Date().toISOString(),
-      type: 'cliente_registrado',
-      clientName: 'Sistema Trip Now',
-      clientEmail: 'info@tripnow.sv',
-      details: 'Base de datos en tiempo real conectada exitosamente a Firebase Firestore.',
-      status: 'activo'
-    } as ClientMovement);
   } catch (err) {
-    console.warn('Initial seed to Firestore note:', err);
+    console.warn('Firestore mock cleanup note:', err);
   }
 };
