@@ -1,12 +1,10 @@
 {
-  "projectId": "future-forge-lq6d2",
-  "appId": "1:314015129346:web:fed9c24d483681f51c6c1b",
-  "apiKey": "AIzaSyCxj12repcxKjxnvJebF4jx9t9Iw5RITV0",
-  "authDomain": "future-forge-lq6d2.firebaseapp.com",
-  "firestoreDatabaseId": "ai-studio-tripnowrentadeve-06bf2237-576e-41ac-835c-530c1b918971",
-  "storageBucket": "future-forge-lq6d2.firebasestorage.app",
-  "messagingSenderId": "314015129346",
-  "measurementId": "",
-  "oAuthClientId": "314015129346-t6v7rp8544bmju837nvv1m7g5bcrl96d.apps.googleusercontent.com",
-  "recaptchaSiteKey": ""
+  "projectId": "trip-now-29abc",
+  "appId": "1:919271389331:web:c7b9ce9b77453cd1ad3566",
+  "apiKey": "AIzaSyB9V2GwLFhz8fv6H_uUO8yazZip7ysOZe8",
+  "authDomain": "trip-now-29abc.firebaseapp.com",
+  "firestoreDatabaseId": "",
+  "storageBucket": "trip-now-29abc.firebasestorage.app",
+  "messagingSenderId": "919271389331",
+  "measurementId": "G-KTT9Q13EML"
 }
