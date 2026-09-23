@@ -1,0 +1,6 @@
+{
+  "name": "Trip Now - Renta de Vehículos en El Salvador",
+  "description": "Plataforma de arrendamiento de vehículos en El Salvador con catálogo en vivo, reservación con agendamiento, sincronización a Google Sheets y panel administrativo.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
