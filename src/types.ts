@@ -31,6 +31,7 @@ export interface Client {
   nombre: string;
   email: string;           // clave natural de deduplicación (case-insensitive)
   telefono: string;
+  documento?: string;      // DUI / Pasaporte / Licencia
   reservas: number;        // contador acumulado
   gastoTotal: number;      // acumulado en USD
   registradoEl?: string;
@@ -63,6 +64,7 @@ export interface UserProfile {
   nombre: string;
   email: string;
   telefono: string;
+  documento?: string;
 }
 
 export type MovementType = 

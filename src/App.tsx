@@ -27,6 +27,7 @@ import { CartView } from './components/CartView';
 import { BranchesView } from './components/BranchesView';
 import { AdminPanel } from './components/AdminPanel';
 import { AuthModal } from './components/AuthModal';
+import { WelcomeGate } from './components/WelcomeGate';
 import { Footer } from './components/Footer';
 import { ToastProvider, useToast } from './components/Toast';
 
@@ -49,7 +50,7 @@ function AppContent() {
   const [isAdmin, setIsAdmin] = useState<boolean>(isAdminAuthenticated());
 
   // Modals & Navigation helpers
-  const [authModalOpen, setAuthModalOpen] = useState<boolean>(!getProfile());
+  const [authModalOpen, setAuthModalOpen] = useState<boolean>(false);
   const [catalogInitialFilter, setCatalogInitialFilter] = useState<string>('all');
   const [selectedBranchId, setSelectedBranchId] = useState<string>('b1');
 
@@ -332,6 +333,17 @@ function AppContent() {
           />
         )}
       </main>
+
+      {/* Welcome Onboarding Screen */}
+      <WelcomeGate
+        isOpen={!profile && currentTab !== 'admin'}
+        onRegister={handleSaveProfile}
+        onAdminAccess={() => {
+          setCurrentTab('admin');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        lang={lang}
+      />
 
       {/* Customer Identification Modal */}
       <AuthModal

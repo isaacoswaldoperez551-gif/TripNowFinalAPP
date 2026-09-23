@@ -405,6 +405,10 @@ export const CartView: React.FC<CartViewProps> = ({
                 <div>
                   <input
                     type="text"
+                    name="tn_cart_guest_name"
+                    autoComplete="off"
+                    data-lpignore="true"
+                    spellCheck={false}
                     required
                     placeholder={t('cart.name_placeholder', lang)}
                     value={profile ? profile.nombre : guestName}
@@ -417,6 +421,10 @@ export const CartView: React.FC<CartViewProps> = ({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <input
                     type="email"
+                    name="tn_cart_guest_email"
+                    autoComplete="off"
+                    data-lpignore="true"
+                    spellCheck={false}
                     required
                     placeholder={t('cart.email_placeholder', lang)}
                     value={profile ? profile.email : guestEmail}
@@ -426,6 +434,10 @@ export const CartView: React.FC<CartViewProps> = ({
                   />
                   <input
                     type="tel"
+                    name="tn_cart_guest_phone"
+                    autoComplete="off"
+                    data-lpignore="true"
+                    spellCheck={false}
                     required
                     placeholder={t('cart.phone_placeholder', lang)}
                     value={profile ? profile.telefono : guestPhone}

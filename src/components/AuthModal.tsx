@@ -76,7 +76,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4 text-xs font-mono">
+        <form onSubmit={handleSubmit} autoComplete="off" data-form-type="other" className="space-y-4 text-xs font-mono">
           <div>
             <label className="block text-stone-600 mb-1 font-sans font-semibold">
               {t('auth.name', lang)}
@@ -85,11 +85,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <User className="w-4 h-4 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
+                name="tn_prof_name"
+                autoComplete="off"
+                data-lpignore="true"
+                spellCheck={false}
                 required
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
                 placeholder={lang === 'es' ? 'Ej. Juan Pérez' : 'e.g. John Doe'}
-                className="w-full bg-stone-50 border border-stone-200 rounded-lg pl-9 pr-3 py-2.5 text-stone-900 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                className="w-full bg-stone-50 border border-stone-200 rounded-lg pl-9 pr-3 py-2.5 text-stone-900 focus:outline-none focus:ring-2 focus:ring-amber-500 font-sans"
               />
             </div>
           </div>
@@ -102,11 +106,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <Mail className="w-4 h-4 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="email"
+                name="tn_prof_email"
+                autoComplete="off"
+                data-lpignore="true"
+                spellCheck={false}
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={lang === 'es' ? 'juan@ejemplo.com' : 'john@example.com'}
-                className="w-full bg-stone-50 border border-stone-200 rounded-lg pl-9 pr-3 py-2.5 text-stone-900 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                className="w-full bg-stone-50 border border-stone-200 rounded-lg pl-9 pr-3 py-2.5 text-stone-900 focus:outline-none focus:ring-2 focus:ring-amber-500 font-sans"
               />
             </div>
           </div>
@@ -119,11 +127,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <Phone className="w-4 h-4 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="tel"
+                name="tn_prof_phone"
+                autoComplete="off"
+                data-lpignore="true"
+                spellCheck={false}
                 required
                 value={telefono}
                 onChange={(e) => setTelefono(e.target.value)}
                 placeholder="+503 7000-0000"
-                className="w-full bg-stone-50 border border-stone-200 rounded-lg pl-9 pr-3 py-2.5 text-stone-900 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                className="w-full bg-stone-50 border border-stone-200 rounded-lg pl-9 pr-3 py-2.5 text-stone-900 focus:outline-none focus:ring-2 focus:ring-amber-500 font-sans"
               />
             </div>
           </div>

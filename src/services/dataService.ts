@@ -18,14 +18,14 @@ import rav4Img from '../assets/images/vehicle_toyota_rav4_1790123629362.jpg';
 import corollaImg from '../assets/images/vehicle_corolla_sedan_1790123639645.jpg';
 
 const STORAGE_KEYS = {
-  VEHICLES: 'tripnow_vehicles',
-  BRANCHES: 'tripnow_branches',
-  CLIENTS: 'tripnow_clients',
-  RESERVATIONS: 'tripnow_reservations',
-  CART: 'tripnow_cart',
-  PROFILE: 'tripnow_profile',
+  VEHICLES: 'tripnow_vehicles_v2',
+  BRANCHES: 'tripnow_branches_v2',
+  CLIENTS: 'tripnow_clients_v2',
+  RESERVATIONS: 'tripnow_reservations_v2',
+  CART: 'tripnow_cart_v2',
+  PROFILE: 'tripnow_profile_v2',
   LANG: 'tripnow_lang',
-  ADMIN_SESSION: 'tripnow_admin_session'
+  ADMIN_SESSION: 'tripnow_admin_session_v2'
 };
 
 const DEFAULT_BRANCHES: Branch[] = [
@@ -164,18 +164,12 @@ const DEFAULT_RESERVATIONS: Reservation[] = [];
 // Automatic cleanup of legacy demo mock data
 export function cleanMockStorage(): void {
   try {
-    const rawProfile = localStorage.getItem(STORAGE_KEYS.PROFILE);
-    if (rawProfile && (rawProfile.includes('Carlos') || rawProfile.includes('Elena'))) {
-      localStorage.removeItem(STORAGE_KEYS.PROFILE);
-    }
-    const rawClients = localStorage.getItem(STORAGE_KEYS.CLIENTS);
-    if (rawClients && (rawClients.includes('c_demo_') || rawClients.includes('Carlos Menéndez') || rawClients.includes('Elena Rodríguez'))) {
-      localStorage.setItem(STORAGE_KEYS.CLIENTS, JSON.stringify([]));
-    }
-    const rawReservations = localStorage.getItem(STORAGE_KEYS.RESERVATIONS);
-    if (rawReservations && (rawReservations.includes('r_17100010') || rawReservations.includes('Carlos Menéndez') || rawReservations.includes('Elena Rodríguez'))) {
-      localStorage.setItem(STORAGE_KEYS.RESERVATIONS, JSON.stringify([]));
-    }
+    // Purge old v1 storage items from browser
+    localStorage.removeItem('tripnow_profile');
+    localStorage.removeItem('tripnow_clients');
+    localStorage.removeItem('tripnow_reservations');
+    localStorage.removeItem('tripnow_cart');
+    sessionStorage.removeItem('tripnow_admin_session');
   } catch {}
 }
 
@@ -311,6 +305,7 @@ export function registerClient(profile: UserProfile): Client {
   if (existing) {
     existing.nombre = profile.nombre;
     existing.telefono = profile.telefono;
+    if (profile.documento) existing.documento = profile.documento;
     updatedClient = existing;
   } else {
     updatedClient = {
@@ -318,6 +313,7 @@ export function registerClient(profile: UserProfile): Client {
       nombre: profile.nombre,
       email: normalizedEmail,
       telefono: profile.telefono,
+      documento: profile.documento || '',
       reservas: 0,
       gastoTotal: 0,
       registradoEl: new Date().toISOString()
