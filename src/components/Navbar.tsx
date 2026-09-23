@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShoppingBag, User, ShieldCheck, Globe, Menu, X } from 'lucide-react';
+import { ShoppingBag, User, ShieldCheck, Globe, Menu, X, Trash2 } from 'lucide-react';
 import { Language, UserProfile } from '../types';
 import { t } from '../services/i18n';
 
@@ -153,6 +153,21 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <ShieldCheck className="w-4 h-4" />
             </button>
+
+            {/* Acceso directo a Eliminar Clientes en la barra de navegación */}
+            {(currentTab === 'admin' || isAdmin) && (
+              <button
+                onClick={() => {
+                  handleNav('admin');
+                  window.dispatchEvent(new CustomEvent('tripnow_open_delete_clients'));
+                }}
+                className="hidden md:flex items-center gap-1.5 px-3 py-1.5 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white rounded-lg text-xs font-semibold shadow-xs cursor-pointer transition-all"
+                title="Eliminar Clientes en Firebase"
+              >
+                <Trash2 className="w-3.5 h-3.5 text-white" />
+                <span>Eliminar Clientes</span>
+              </button>
+            )}
 
             {/* Mobile menu trigger */}
             <button

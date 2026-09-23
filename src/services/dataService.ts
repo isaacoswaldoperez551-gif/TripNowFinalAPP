@@ -9,7 +9,8 @@ import {
   saveReservationToFirestore,
   saveClientToFirestore,
   updateReservationStatusInFirestore,
-  seedInitialFirestoreData
+  deleteClientFromFirestore,
+  deleteAllClientsFromFirestore
 } from './firebase';
 
 // Generated asset paths
@@ -332,6 +333,24 @@ export function registerClient(profile: UserProfile): Client {
 
   return updatedClient;
 }
+
+export async function deleteClient(id: string, name?: string, email?: string): Promise<boolean> {
+  const current = getClients();
+  const target = current.find(c => c.id === id || (email && c.email.toLowerCase().trim() === email.toLowerCase().trim()));
+  const filtered = current.filter(c => c.id !== id && (!email || c.email.toLowerCase().trim() !== email.toLowerCase().trim()));
+  saveClients(filtered);
+
+  // Sync deletion with Firestore
+  await deleteClientFromFirestore(id, target?.nombre || name, target?.email || email);
+  return true;
+}
+
+export async function deleteAllClients(): Promise<boolean> {
+  saveClients([]);
+  await deleteAllClientsFromFirestore();
+  return true;
+}
+
 
 // --- User Profile (Active Session) ---
 export function getProfile(): UserProfile | null {

@@ -12,7 +12,7 @@ import {
   getSavedLanguage, saveLanguage, addToCart, updateCartItemDays, removeFromCart,
   clearCart, processPurchase, setReservationStatus, addVehicle, deleteVehicle,
   adjustVehicleStock, togglePauseVehicle, addBranch, registerClient, saveProfile,
-  isAdminAuthenticated, setAdminSession
+  isAdminAuthenticated, setAdminSession, deleteClient, deleteAllClients
 } from './services/dataService';
 import {
   subscribeToMovements,
@@ -208,6 +208,19 @@ function AppContent() {
     refreshData();
   };
 
+  // Client deletion (from Firestore & local database)
+  const handleDeleteClient = async (id: string, name?: string, email?: string) => {
+    await deleteClient(id, name, email);
+    refreshData();
+    toast.info(lang === 'es' ? 'Cliente eliminado de Firebase y del sistema' : 'Client removed');
+  };
+
+  const handleDeleteAllClients = async () => {
+    await deleteAllClients();
+    refreshData();
+    toast.info(lang === 'es' ? 'Todos los clientes han sido eliminados de Firebase' : 'All clients purged');
+  };
+
   // Customer Profile
   const handleSaveProfile = (newProfile: UserProfile) => {
     registerClient(newProfile);
@@ -329,6 +342,8 @@ function AppContent() {
             onAdjustStock={handleAdjustStock}
             onUpdateReservationStatus={handleUpdateReservationStatus}
             onAddBranch={handleAddBranch}
+            onDeleteClient={handleDeleteClient}
+            onDeleteAllClients={handleDeleteAllClients}
             onRefreshData={refreshData}
           />
         )}

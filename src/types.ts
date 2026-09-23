@@ -70,6 +70,7 @@ export interface UserProfile {
 export type MovementType = 
   | 'reserva_creada' 
   | 'cliente_registrado' 
+  | 'cliente_eliminado'
   | 'viaje_en_curso' 
   | 'viaje_finalizado' 
   | 'viaje_cancelado' 

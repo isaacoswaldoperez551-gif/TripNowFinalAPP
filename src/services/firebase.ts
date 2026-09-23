@@ -240,3 +240,72 @@ export const cleanMockFirestoreData = async () => {
     console.warn('Firestore mock cleanup note:', err);
   }
 };
+
+/**
+ * Delete a specific client from Firestore and record the movement
+ */
+export const deleteClientFromFirestore = async (
+  clientId: string,
+  clientName?: string,
+  clientEmail?: string
+): Promise<boolean> => {
+  try {
+    // 1. Delete by document ID
+    const clientRef = doc(db, CLIENTS_COL, clientId);
+    await deleteDoc(clientRef);
+
+    // 2. Also ensure any document matching this email is removed
+    if (clientEmail) {
+      try {
+        const snap = await getDocs(collection(db, CLIENTS_COL));
+        for (const d of snap.docs) {
+          const data = d.data();
+          if (data.email?.toLowerCase().trim() === clientEmail.toLowerCase().trim()) {
+            await deleteDoc(doc(db, CLIENTS_COL, d.id));
+          }
+        }
+      } catch (subErr) {
+        console.warn('Secondary email check notice:', subErr);
+      }
+    }
+
+    // 3. Record audit movement in real time
+    await recordClientMovement({
+      timestamp: new Date().toISOString(),
+      type: 'cliente_eliminado',
+      clientName: clientName || 'Cliente',
+      clientEmail: clientEmail || '',
+      details: `Cliente (${clientName || clientId}) fue eliminado de la base de datos por el Administrador.`
+    });
+
+    return true;
+  } catch (err) {
+    console.error('Error deleting client from Firestore:', err);
+    return false;
+  }
+};
+
+/**
+ * Delete all clients from Firestore (clean slate)
+ */
+export const deleteAllClientsFromFirestore = async (): Promise<boolean> => {
+  try {
+    const clientsSnap = await getDocs(collection(db, CLIENTS_COL));
+    for (const d of clientsSnap.docs) {
+      await deleteDoc(doc(db, CLIENTS_COL, d.id));
+    }
+
+    await recordClientMovement({
+      timestamp: new Date().toISOString(),
+      type: 'cliente_eliminado',
+      clientName: 'Administrador',
+      clientEmail: 'admin@tripnow.sv',
+      details: `El Administrador purgó la lista completa de clientes en Firebase.`
+    });
+
+    return true;
+  } catch (err) {
+    console.error('Error purging all clients from Firestore:', err);
+    return false;
+  }
+};
